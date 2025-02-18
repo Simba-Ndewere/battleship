@@ -1,1 +1,1 @@
-const test = 42;
+let a = 0;
