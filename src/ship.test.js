@@ -16,3 +16,10 @@ test('ship is sunk test', () => {
     data.isSunk();
     expect(data.sunk).toBeTruthy();
 });
+
+test('ship is hit test', () => {
+    const data = shipObject(3);
+    expect(data.hitSum).toBe(0);
+    data.hit();
+    expect(data.hitSum).toBe(1);
+});
