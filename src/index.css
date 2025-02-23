@@ -1,9 +1,36 @@
-.container {
-    
-}
-
 html,
 body {
     height: 100%;
     margin: 0;
+}
+
+.container {
+    height: 100%;
+    width: 80%;
+    border: solid 2px black;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.top {
+    border: solid 2px black;
+    height: 10%;
+}
+
+.bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.left {
+    border: solid 2px green;
+    width: 50%;
+}
+
+.right {
+    border: solid 2px blue;
+    width: 50%;
 }
