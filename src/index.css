@@ -11,11 +11,13 @@ body {
     margin: auto;
     display: flex;
     flex-direction: column;
+    font-family: 'Quicksand', sans-serif;
 }
 
 .top {
     border: solid 2px black;
     height: 10%;
+    font-size: 40px;
 }
 
 .bottom {
