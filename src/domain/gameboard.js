@@ -1,7 +1,7 @@
 function gameboard() {
     return {
         allShipsSunk: false,
-        coordinates: [],
+        shipCoordinates: [],
 
         receiveAttack: function(coordinates) {
             

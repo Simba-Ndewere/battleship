@@ -1,1 +1,1 @@
-let a = 0;
+import "./index.css";
