@@ -5,7 +5,15 @@ function gameboard() {
 
         receiveAttack: function(coordinates) {
             
-        }   
+        },
+
+        addCoordinates: function(coordinates){
+            this.shipCoordinates.push(coordinates);
+        },
+
+        shuffle: function() {
+
+        }
     }
 }
 
