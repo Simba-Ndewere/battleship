@@ -61,3 +61,7 @@ body {
     background-color: #b55a3f;
     border-radius: 5px;
 }
+
+.cell2:hover {
+    background-color: #7f3f2c;
+}
