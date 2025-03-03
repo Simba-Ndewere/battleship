@@ -12,19 +12,24 @@ const createShips = () => {
     const playerGameBoard = gameboard();
 
     const cruiser = ship(2);
+
     const battleship = ship(4);
     const submarine = ship(3);
     const aircraft = ship(5);
     const destroyer = ship(3);
 
-    //console.log(cruiser);
+    Dom.playerDefaultPlacement(battleship, 'a', 12);
+    Dom.playerDefaultPlacement(cruiser, 'u', 46);
+    Dom.playerDefaultPlacement(submarine, 'u', 40);
+    Dom.playerDefaultPlacement(aircraft, 'a', 81);
+    Dom.playerDefaultPlacement(destroyer, 'u', 89);
 }
 
 shuffleShips.addEventListener('click', function () {
     console.log("shuffle");
 });
 
-newGame.addEventListener('click', function() {
+newGame.addEventListener('click', function () {
     console.log("new game");
 });
 
