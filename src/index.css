@@ -102,3 +102,9 @@ body {
     display: flex;
     justify-content: space-between;
 }
+
+.shipPlacement {
+    background-color: gray;
+    border-radius: 10px;
+    border: solid 2px black;
+}
