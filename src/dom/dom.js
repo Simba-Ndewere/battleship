@@ -1,3 +1,4 @@
+
 class Dom {
 
     static createBoardGrids(){
@@ -15,6 +16,22 @@ class Dom {
             cell2.id = 'cell2' + a;
             board1.appendChild(cell);
             board2.appendChild(cell2);
+        }
+    }
+
+    static playerDefaultPlacement(ship, direction, startingPosition) {
+        for(let a = 0; a < ship.length; a++){
+            const cell = document.getElementById("cell" + startingPosition);
+            cell.classList.add("shipPlacement");
+
+            if(direction === 'a'){
+                startingPosition = startingPosition + 1;
+            }
+
+            if(direction === 'u'){
+                startingPosition = startingPosition - 10;
+            }
+
         }
     }
 }
