@@ -108,3 +108,10 @@ body {
     border-radius: 10px;
     border: solid 2px black;
 }
+
+
+
+html {
+    visibility: visible;
+    opacity: 1;
+}
