@@ -16,43 +16,36 @@ function gameboard() {
 
         shuffle: function () {
 
-            let shipsArray = [];
-
             this.shipCoordinates.length = 0;
             this.duplicateCells.length = 0;
 
             const cruiser = ship(2);
-            shipsArray.push(cruiser);
             let cruiserAxes = this.direction(2);
             let cruiserCoordinates = this.generateCoordinates(cruiser, cruiserAxes);
-            this.shipCoordinates.push(cruiserCoordinates);            
+            this.shipCoordinates.push(cruiserCoordinates);
 
             const battleship = ship(4);
-            shipsArray.push(battleship);
             let battleshipAxes = this.direction(2);
             let battleshipCoordinates = this.generateCoordinates(battleship, battleshipAxes);
             this.shipCoordinates.push(battleshipCoordinates);
 
             const submarine = ship(3);
-            shipsArray.push(submarine);
             let submarineAxes = this.direction(2);
             let submarineCoordinates = this.generateCoordinates(submarine, submarineAxes);
             this.shipCoordinates.push(submarineCoordinates);
 
             const aircraft = ship(5);
-            shipsArray.push(aircraft);
             let aircraftAxes = this.direction(2);
             let aircraftCoordinates = this.generateCoordinates(aircraft, aircraftAxes);
             this.shipCoordinates.push(aircraftCoordinates);
 
             const destroyer = ship(3);
-            shipsArray.push(destroyer);
             let destroyerAxes = this.direction(2);
             let destroyerCoordinates = this.generateCoordinates(destroyer, destroyerAxes);
             this.shipCoordinates.push(destroyerCoordinates);
-            
+
             console.log(this.shipCoordinates);
-            return shipsArray;
+            return this.shipCoordinates;
         },
 
         generateCoordinates: function (ship, axes) {
@@ -61,55 +54,52 @@ function gameboard() {
             let exit = false;
             let shipLength = ship.length;
             let shipCoordinates = [];
+            let duplicateCell = [];
 
             while (!exit) {
                 let startingPosition = this.direction(100);
-
-                if (!this.duplicateCells.includes(startingPosition)) {
-                    this.duplicateCells.push(startingPosition);
-                    shipCoordinates.push(startingPosition);
-                }
-
+                duplicateCell.push(startingPosition);
+                shipCoordinates.push(startingPosition);
                 let direction = axes == 1 ? this.verticalDirection(startingPosition) : this.horizontalDirection(startingPosition);
-
+          
                 for (let a = 1; a < shipLength; a++) {
-                    if (axes == 1) {
-                        if (direction === 'up') {
-                            startingPosition = startingPosition - 10;
+                    let overboard = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
 
-                        } else {
-                            startingPosition = startingPosition + 10;
-                        }
+                    if (axes == 1)
+                        direction === 'up' ? startingPosition = startingPosition - 10 : startingPosition = startingPosition + 10;
+                    else
+                        direction === 'left' ? startingPosition = startingPosition - 1 : startingPosition = startingPosition + 1;
 
 
-                    } else {
-                        if (direction === 'left') {
-                            startingPosition = startingPosition - 1;
-                        } else {
-                            startingPosition = startingPosition + 1;
-                        }
-
+                    if (this.duplicateCells.flat().includes(startingPosition)) {
+                        shipCoordinates.length = 0;
+                        duplicateCell.length = 0;
+                        break;
+                    } else {   
+                        shipCoordinates.push(startingPosition);
+                        duplicateCell.push(startingPosition);
                     }
 
-                    if (this.duplicateCells.includes(startingPosition)) {
+                    if (a != shipLength-1 && overboard.includes(startingPosition)) {
+                        duplicateCell.length = 0;
                         shipCoordinates.length = 0;
                         break;
-                    } else {
-                        shipCoordinates.push(startingPosition);
-                        this.duplicateCells.push(startingPosition);
                     }
 
                     if (startingPosition < 0 || startingPosition > 99) {
                         shipCoordinates.length = 0;
+                        duplicateCell.length = 0;
                         break;
                     }
 
-                    if (a == shipLength -1){
+                    if (a == shipLength - 1) {
                         complete = true;
                     }
+
                 }
 
-                if(complete){
+                if (complete) {
+                    this.duplicateCells.push(duplicateCell);
                     exit = true;
                 }
             }
@@ -150,6 +140,7 @@ function gameboard() {
 
             if (rightEdge.includes(sp))
                 direction = 'left';
+
 
             return direction;
         }
