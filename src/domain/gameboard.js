@@ -43,7 +43,7 @@ function gameboard() {
             let destroyerAxes = this.direction(2);
             let destroyerCoordinates = this.generateCoordinates(destroyer, destroyerAxes);
             this.shipCoordinates.push(destroyerCoordinates);
-            console.log(this.shipCoordinates);
+
             return this.shipCoordinates;
         },
 
@@ -61,12 +61,10 @@ function gameboard() {
                 duplicateCell.push(startingPosition);
                 shipCoordinates.push(startingPosition);
 
-
                 let direction = axes == 1 ? this.verticalDirection(startingPosition) : this.horizontalDirection(startingPosition);
 
                 for (let a = 1; a < shipLength; a++) {
                     let overboard = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
-
 
                     if (axes == 1)
                         direction === 'up' ? startingPosition = startingPosition - 10 : startingPosition = startingPosition + 10;
@@ -74,31 +72,18 @@ function gameboard() {
                         direction === 'left' ? startingPosition = startingPosition - 1 : startingPosition = startingPosition + 1;
 
 
-                    if (this.duplicateCells.flat().includes(startingPosition)) {
-                        shipCoordinates.length = 0;
-                        duplicateCell.length = 0;
-                        break;
-                    } else {
-                        shipCoordinates.push(startingPosition);
-                        duplicateCell.push(startingPosition);
-                    }
+                    if (!this.checkNewPositionDuplicate(startingPosition, duplicateCell, shipCoordinates)) break;
 
                     if (a != shipLength - 1 && overboard.includes(startingPosition)) {
-                        duplicateCell.length = 0;
-                        shipCoordinates.length = 0;
+                        this.resetArrays(shipCoordinates,duplicateCell);
                         break;
                     }
 
-                    if (startingPosition < 0 || startingPosition > 99) {
-                        shipCoordinates.length = 0;
-                        duplicateCell.length = 0;
-                        break;
-                    }
+                    if (!this.checkOutOfBounds(startingPosition, shipCoordinates, duplicateCell)) break;
 
                     if (a == shipLength - 1) {
                         complete = true;
                     }
-
                 }
 
                 if (complete) {
@@ -109,18 +94,43 @@ function gameboard() {
             return shipCoordinates;
         },
 
+        checkNewPositionDuplicate: function (startingPosition, duplicateCell, shipCoordinates) {
+            if (this.duplicateCells.flat().includes(startingPosition)) {
+                this.resetArrays(shipCoordinates,duplicateCell);
+                return false;
+            } else {
+                shipCoordinates.push(startingPosition);
+                duplicateCell.push(startingPosition);
+                return true;
+            }
+        },
+
+        checkOutOfBounds: function (startingPosition, shipCoordinates, duplicateCell) {
+            if (startingPosition < 0 || startingPosition > 99) {
+                this.resetArrays(shipCoordinates,duplicateCell);
+                return false;
+            } else {
+                return true;
+            }
+        },
+
+        resetArrays: function (shipCoordinates, duplicateCell) {
+            shipCoordinates.length = 0;
+            duplicateCell.length = 0;
+        },
+
         direction: function (max) {
             if (max == 100) {
                 let exit = false;
                 let startingPosition = 0;
-                while(!exit){
+                while (!exit) {
                     startingPosition = Math.floor(Math.random() * max);
-                    if(!this.duplicateCells.flat().includes(startingPosition)){
+                    if (!this.duplicateCells.flat().includes(startingPosition)) {
                         exit = true;
                     }
                 }
                 return startingPosition;
-            }else{
+            } else {
                 return Math.floor(Math.random() * max);
             }
         },
@@ -155,7 +165,6 @@ function gameboard() {
 
             if (rightEdge.includes(sp))
                 direction = 'left';
-
 
             return direction;
         }
