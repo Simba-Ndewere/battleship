@@ -20,29 +20,18 @@ function gameboard() {
             this.duplicateCells.length = 0;
 
             const cruiser = ship(2);
-            let cruiserAxes = this.direction(2);
-            let cruiserCoordinates = this.generateCoordinates(cruiser, cruiserAxes);
-            this.shipCoordinates.push(cruiserCoordinates);
-
             const battleship = ship(4);
-            let battleshipAxes = this.direction(2);
-            let battleshipCoordinates = this.generateCoordinates(battleship, battleshipAxes);
-            this.shipCoordinates.push(battleshipCoordinates);
-
             const submarine = ship(3);
-            let submarineAxes = this.direction(2);
-            let submarineCoordinates = this.generateCoordinates(submarine, submarineAxes);
-            this.shipCoordinates.push(submarineCoordinates);
-
             const aircraft = ship(5);
-            let aircraftAxes = this.direction(2);
-            let aircraftCoordinates = this.generateCoordinates(aircraft, aircraftAxes);
-            this.shipCoordinates.push(aircraftCoordinates);
-
             const destroyer = ship(3);
-            let destroyerAxes = this.direction(2);
-            let destroyerCoordinates = this.generateCoordinates(destroyer, destroyerAxes);
-            this.shipCoordinates.push(destroyerCoordinates);
+
+            const ships = [cruiser, battleship, submarine, aircraft, destroyer];
+
+            for (let a = 0; a < ships.length; a++) {
+                let axes = this.direction(2);
+                let coordinates = this.generateCoordinates(ships[a], axes);
+                this.shipCoordinates.push(coordinates);
+            }
 
             return this.shipCoordinates;
         },
@@ -75,7 +64,7 @@ function gameboard() {
                     if (!this.checkNewPositionDuplicate(startingPosition, duplicateCell, shipCoordinates)) break;
 
                     if (a != shipLength - 1 && overboard.includes(startingPosition)) {
-                        this.resetArrays(shipCoordinates,duplicateCell);
+                        this.resetArrays(shipCoordinates, duplicateCell);
                         break;
                     }
 
@@ -96,7 +85,7 @@ function gameboard() {
 
         checkNewPositionDuplicate: function (startingPosition, duplicateCell, shipCoordinates) {
             if (this.duplicateCells.flat().includes(startingPosition)) {
-                this.resetArrays(shipCoordinates,duplicateCell);
+                this.resetArrays(shipCoordinates, duplicateCell);
                 return false;
             } else {
                 shipCoordinates.push(startingPosition);
@@ -107,7 +96,7 @@ function gameboard() {
 
         checkOutOfBounds: function (startingPosition, shipCoordinates, duplicateCell) {
             if (startingPosition < 0 || startingPosition > 99) {
-                this.resetArrays(shipCoordinates,duplicateCell);
+                this.resetArrays(shipCoordinates, duplicateCell);
                 return false;
             } else {
                 return true;
