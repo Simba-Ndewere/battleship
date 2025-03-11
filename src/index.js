@@ -5,30 +5,28 @@ import gameboard from "./domain/gameboard.js";
 
 const shuffleShips = document.getElementById('shuffle');
 const newGame = document.getElementById('newGame');
+const playerGameBoard = gameboard();
 
 Dom.createBoardGrids();
 
 const createShips = () => {
-    const playerGameBoard = gameboard();
-
+    
     const cruiser = ship(2);
-
     const battleship = ship(4);
     const submarine = ship(3);
     const aircraft = ship(5);
     const destroyer = ship(3);
 
-    Dom.playerDefaultPlacement(battleship, 'a', 12, playerGameBoard);
-    Dom.playerDefaultPlacement(cruiser, 'u', 46, playerGameBoard);
-    Dom.playerDefaultPlacement(submarine, 'u', 40, playerGameBoard);
-    Dom.playerDefaultPlacement(aircraft, 'a', 81, playerGameBoard);
-    Dom.playerDefaultPlacement(destroyer, 'u', 89, playerGameBoard);
-
-    console.log(playerGameBoard.shipCoordinates);
+    Dom.playerDefaultPlacement(battleship, 'a', 12, playerGameBoard, "green");
+    Dom.playerDefaultPlacement(cruiser, 'u', 46, playerGameBoard, "black");
+    Dom.playerDefaultPlacement(submarine, 'u', 40, playerGameBoard, "yellow");
+    Dom.playerDefaultPlacement(aircraft, 'a', 81, playerGameBoard, "purple");
+    Dom.playerDefaultPlacement(destroyer, 'u', 89, playerGameBoard,"red");
 }
 
 shuffleShips.addEventListener('click', function () {
-    console.log("shuffle");
+    Dom.clearBoardCells();
+    Dom.placeShipsOnBoard(playerGameBoard.shuffle());
 });
 
 newGame.addEventListener('click', function () {
