@@ -43,7 +43,6 @@ function gameboard() {
             let destroyerAxes = this.direction(2);
             let destroyerCoordinates = this.generateCoordinates(destroyer, destroyerAxes);
             this.shipCoordinates.push(destroyerCoordinates);
-
             console.log(this.shipCoordinates);
             return this.shipCoordinates;
         },
@@ -58,12 +57,16 @@ function gameboard() {
 
             while (!exit) {
                 let startingPosition = this.direction(100);
+
                 duplicateCell.push(startingPosition);
                 shipCoordinates.push(startingPosition);
+
+
                 let direction = axes == 1 ? this.verticalDirection(startingPosition) : this.horizontalDirection(startingPosition);
-          
+
                 for (let a = 1; a < shipLength; a++) {
                     let overboard = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
+
 
                     if (axes == 1)
                         direction === 'up' ? startingPosition = startingPosition - 10 : startingPosition = startingPosition + 10;
@@ -75,12 +78,12 @@ function gameboard() {
                         shipCoordinates.length = 0;
                         duplicateCell.length = 0;
                         break;
-                    } else {   
+                    } else {
                         shipCoordinates.push(startingPosition);
                         duplicateCell.push(startingPosition);
                     }
 
-                    if (a != shipLength-1 && overboard.includes(startingPosition)) {
+                    if (a != shipLength - 1 && overboard.includes(startingPosition)) {
                         duplicateCell.length = 0;
                         shipCoordinates.length = 0;
                         break;
@@ -107,7 +110,19 @@ function gameboard() {
         },
 
         direction: function (max) {
-            return Math.floor(Math.random() * max);
+            if (max == 100) {
+                let exit = false;
+                let startingPosition = 0;
+                while(!exit){
+                    startingPosition = Math.floor(Math.random() * max);
+                    if(!this.duplicateCells.flat().includes(startingPosition)){
+                        exit = true;
+                    }
+                }
+                return startingPosition;
+            }else{
+                return Math.floor(Math.random() * max);
+            }
         },
 
         verticalDirection: function (sp) {
