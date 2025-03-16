@@ -1,6 +1,6 @@
 
 class Dom {
-    static colours = ["black", "green", "red", "purple", "yellow"];
+    static colours = ["black", "green", "blue", "purple", "yellow"];
     static colour = 0;
 
     static createBoardGrids() {
@@ -14,8 +14,8 @@ class Dom {
             cell.classList.add("cell");
             cell2.classList.add("cell2");
 
-            cell.id = 'cell' + a;
-            cell2.id = 'cell2' + a;
+            cell.id = 'playerCell' + a;
+            cell2.id = 'computerCell' + a;
             board1.appendChild(cell);
             board2.appendChild(cell2);
         }
@@ -24,10 +24,10 @@ class Dom {
     static playerDefaultPlacement(ship, direction, startingPosition, gameboard) {
         let coordinates = [];
         for (let a = 0; a < ship.length; a++) {
-            const cell = document.getElementById("cell" + startingPosition);
+            const cell = document.getElementById("playerCell" + startingPosition);
             cell.classList.add("shipPlacement");
             cell.style.border = "solid 5px " + this.colours[this.colour];
-            coordinates.push('cell' + startingPosition);
+            coordinates.push(startingPosition);
 
             if (direction === 'a') {
                 startingPosition = startingPosition + 1;
@@ -39,11 +39,12 @@ class Dom {
         }
         this.colour = this.colour + 1;
         gameboard.addCoordinates(coordinates);
+        ship.addCoordinates(coordinates);
     }
 
     static clearBoardCells() {
         for (let a = 0; a < 100; a++) {
-            let cell = document.getElementById("cell" + a);
+            let cell = document.getElementById("playerCell" + a);
             if (cell.classList.contains("shipPlacement")){
                 cell.classList.remove("shipPlacement");
                 cell.style.border = "none";
@@ -54,7 +55,7 @@ class Dom {
     static placePlayerShipsOnBoard(coordinates) {
         for(let b = 0; b < coordinates.length; b++){
             for (let a = 0; a < coordinates[b].length; a++) {
-                const cell = document.getElementById("cell" + coordinates[b][a]);
+                const cell = document.getElementById("playerCell" + coordinates[b][a]);
                 cell.classList.add("shipPlacement");
                 cell.style.border = "solid 5px " + this.colours[b];
             }
@@ -64,11 +65,18 @@ class Dom {
     static placeComputerShipsOnBoard(coordinates){
         for(let b = 0; b < coordinates.length; b++){
             for (let a = 0; a < coordinates[b].length; a++) {
-                const cell = document.getElementById("cell2" + coordinates[b][a]);
+                const cell = document.getElementById("computerCell" + coordinates[b][a]);
                 cell.classList.add("shipPlacement");
                 cell.style.border = "solid 5px " + this.colours[b];
             }
         }
+    }
+
+    static removeShuffleButton() {
+        const shuffleShipsButton = document.getElementById("shuffle");
+        shuffleShipsButton.classList.add("hideShuffleButton");
+        const newGameButton = document.querySelector(".startGameText");
+        newGameButton.textContent = "Quit Game";
     }
 }
 
