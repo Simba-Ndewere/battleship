@@ -1,37 +1,54 @@
 import "./index.css";
-import Dom from "./dom/dom.js";
+import dom from "./dom/dom.js";
 import ship from './domain/ship.js';
 import gameboard from "./domain/gameboard.js";
+import player from "./domain/player.js";
 
 const shuffleShips = document.getElementById('shuffle');
 const newGame = document.getElementById('newGame');
+
 const playerGameBoard = gameboard();
+const computerGameBoard = gameboard();
 
-Dom.createBoardGrids();
+const currentPlayer = player();
+const computerPlayer = player();
 
-const createShips = () => {
-    
-    const cruiser = ship(2);
-    const battleship = ship(4);
-    const submarine = ship(3);
-    const aircraft = ship(5);
-    const destroyer = ship(3);
+dom.createBoardGrids();
 
-    Dom.playerDefaultPlacement(battleship, 'a', 12, playerGameBoard, "green");
-    Dom.playerDefaultPlacement(cruiser, 'u', 46, playerGameBoard, "black");
-    Dom.playerDefaultPlacement(submarine, 'u', 40, playerGameBoard, "yellow");
-    Dom.playerDefaultPlacement(aircraft, 'a', 81, playerGameBoard, "purple");
-    Dom.playerDefaultPlacement(destroyer, 'u', 89, playerGameBoard,"red");
+const createDefaultPlayerShips = () => {
+
+    const cruiser = ship(2, 0);
+    const battleship = ship(4, 1);
+    const submarine = ship(3, 2);
+    const aircraft = ship(5, 3);
+    const destroyer = ship(3, 4);
+
+    const ships = [cruiser, battleship, submarine, aircraft, destroyer];
+
+    const startingPositions = [12, 46, 40, 81, 89];
+
+    for (let a = 0; a < ships.length; a++) {
+        if (ships[a].length > 3) {
+            dom.playerDefaultPlacement(ships[a], 'a', startingPositions[a], playerGameBoard);
+        } else {
+            dom.playerDefaultPlacement(ships[a], 'u', startingPositions[a], playerGameBoard);
+        }
+        playerGameBoard.ships.push(ships[a]);
+    }
+    currentPlayer.addGameBoard(playerGameBoard);
 }
 
 shuffleShips.addEventListener('click', function () {
-    Dom.clearBoardCells();
-    Dom.placeShipsOnBoard(playerGameBoard.shuffle());
+    dom.clearBoardCells();
+    dom.placePlayerShipsOnBoard(playerGameBoard.shuffle());
+    currentPlayer.addGameBoard(playerGameBoard);
 });
 
 newGame.addEventListener('click', function () {
-    console.log("new game");
+    dom.placeComputerShipsOnBoard(computerGameBoard.shuffle());
+    dom.removeShuffleButton();
+    computerPlayer.addGameBoard(computerGameBoard);
 });
 
-window.onload = createShips();
+window.onload = createDefaultPlayerShips();
 
