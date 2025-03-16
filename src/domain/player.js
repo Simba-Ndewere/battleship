@@ -4,6 +4,10 @@ function player(gameBoard) {
 
         getGameBoard: function() {
             return this.board;
+        },
+
+        addGameBoard: function(board) {
+            this.gameBoard = board;
         }
     }
 
