@@ -5,9 +5,36 @@ function gameboard() {
         allShipsSunk: false,
         shipCoordinates: [],
         duplicateCells: [],
+        ships: [],
 
-        receiveAttack: function (coordinates) {
+        receiveAttack: function (coordinate) {
+            //check cell clicked
+            //check cell clicked is in ship coordinates
+            //check which ship has been hit
+            //check if the ship has been sunk
 
+        },
+
+        checkInShipCoordinate: function (coordinate) {
+            for (let a = 0; a < this.shipCoordinates.length; a++) {
+                for (let b = 0; b < this.shipCoordinates[a].length; b++) {
+                    if (coordinate == this.shipCoordinates[a][b]) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        },
+
+        checkShipHit: function (coordinate) {
+            for(let a = 0; a < this.ships.length; a++){
+                const coordinatesShipArray = this.ships[a].getCoordinates();
+                for(let b = 0; b < coordinatesShipArray.length; b++){
+                    if(coordinatesShipArray[b]==coordinate){
+                        return this.ships[a].getShipIdentification();
+                    }
+                }
+            }
         },
 
         addCoordinates: function (coordinates) {
@@ -15,24 +42,24 @@ function gameboard() {
         },
 
         shuffle: function () {
-
             this.shipCoordinates.length = 0;
             this.duplicateCells.length = 0;
 
-            const cruiser = ship(2);
-            const battleship = ship(4);
-            const submarine = ship(3);
-            const aircraft = ship(5);
-            const destroyer = ship(3);
+            const cruiser = ship(2, 0);
+            const battleship = ship(4, 1);
+            const submarine = ship(3, 2);
+            const aircraft = ship(5, 3);
+            const destroyer = ship(3, 4);
 
             const ships = [cruiser, battleship, submarine, aircraft, destroyer];
 
             for (let a = 0; a < ships.length; a++) {
                 let axes = this.direction(2);
                 let coordinates = this.generateCoordinates(ships[a], axes);
+                ships[a].addCoordinates(coordinates);
                 this.shipCoordinates.push(coordinates);
+                this.ships.push(ships[a]);
             }
-
             return this.shipCoordinates;
         },
 
@@ -59,7 +86,6 @@ function gameboard() {
                         direction === 'up' ? startingPosition = startingPosition - 10 : startingPosition = startingPosition + 10;
                     else
                         direction === 'left' ? startingPosition = startingPosition - 1 : startingPosition = startingPosition + 1;
-
 
                     if (!this.checkNewPositionDuplicate(startingPosition, duplicateCell, shipCoordinates)) break;
 
