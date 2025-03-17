@@ -108,11 +108,17 @@ body {
 .cell {
     background-color: #3f8cb5;
     border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .cell2 {
     background-color: #b55a3f;
     border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .cell2:hover {
@@ -135,7 +141,14 @@ body {
     pointer-events: none;
 }
 
+.shipCellAttacked {
+    border-color: red;
+}
+
+
 html {
     visibility: visible;
     opacity: 1;
 }
+
+
