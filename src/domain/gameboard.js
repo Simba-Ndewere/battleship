@@ -1,4 +1,6 @@
 import ship from './ship'
+import hitImage from '../hit.png'
+import missImage from '../miss.png'
 
 function gameboard() {
     return {
@@ -7,12 +9,27 @@ function gameboard() {
         duplicateCells: [],
         ships: [],
 
-        receiveAttack: function (coordinate) {
+        receiveAttack: function (coordinate, cellType) {
             //check cell clicked
             //check cell clicked is in ship coordinates
             //check which ship has been hit
             //check if the ship has been sunk
 
+            const cellAttacked = document.getElementById(cellType + coordinate);
+            const imageDiv = document.createElement("img");
+
+
+            let shipHit = this.checkInShipCoordinate(coordinate);
+            if (shipHit) {
+                imageDiv.src = hitImage;
+                imageDiv.setAttribute("height", "35");
+                imageDiv.setAttribute("width", "35");
+            } else {
+                imageDiv.src = missImage;
+                imageDiv.setAttribute("height", "45");
+                imageDiv.setAttribute("width", "45");
+            }
+            cellAttacked.appendChild(imageDiv);
         },
 
         checkInShipCoordinate: function (coordinate) {
@@ -27,10 +44,10 @@ function gameboard() {
         },
 
         checkShipHit: function (coordinate) {
-            for(let a = 0; a < this.ships.length; a++){
+            for (let a = 0; a < this.ships.length; a++) {
                 const coordinatesShipArray = this.ships[a].getCoordinates();
-                for(let b = 0; b < coordinatesShipArray.length; b++){
-                    if(coordinatesShipArray[b]==coordinate){
+                for (let b = 0; b < coordinatesShipArray.length; b++) {
+                    if (coordinatesShipArray[b] == coordinate) {
                         return this.ships[a].getShipIdentification();
                     }
                 }
