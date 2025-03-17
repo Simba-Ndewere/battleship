@@ -6,10 +6,12 @@ import player from "./domain/player.js";
 
 const shuffleShips = document.getElementById('shuffle');
 const newGame = document.getElementById('newGame');
+const playerBoard = document.querySelector(".board1");
+const computerBoard = document.querySelector(".board2");
 
 const playerGameBoard = gameboard();
 const computerGameBoard = gameboard();
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 const currentPlayer = player();
 const computerPlayer = player();
 
@@ -50,5 +52,19 @@ newGame.addEventListener('click', function () {
     computerPlayer.addGameBoard(computerGameBoard);
 });
 
+playerBoard.addEventListener("click", (event) => {
+    if(event.target.classList.contains("cell")){
+        let id = Number(event.target.id.substring(10));
+    }
+});
+
+computerBoard.addEventListener("click",(event) => {
+    if(event.target.classList.contains("cell2")){
+        let id = Number(event.target.id.substring(12));
+        console.log(id);
+    }
+});
+
+//playerCell
 window.onload = createDefaultPlayerShips();
 
