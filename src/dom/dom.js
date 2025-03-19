@@ -99,9 +99,34 @@ class Dom {
         cellAttacked.classList.add("unclickable");
     }
 
-    static shipSunk(cellType, coordinate){
+    static shipSunk(cellType, coordinate) {
         const cellAttacked = document.getElementById(cellType + coordinate);
         cellAttacked.style.border = "solid 5px red";
+    }
+
+    static hitOrMissDisplay(value) {
+        const modalDisplay = document.querySelector(".modal-display");
+        modalDisplay.textContent = value;
+    }
+
+    static displayPlayerTurn(player) {
+        const modalDisplay = document.querySelector(".modal-display");
+        setTimeout(function () {
+            if (player === 0) {
+                modalDisplay.textContent = "Your turn";
+            } else {
+                modalDisplay.textContent = "Computer turn";
+            }
+        }, 2000);
+    }
+
+    static lockUnlockBoard(value) {
+        const board2 = document.querySelector(".board2");
+        if (value == 0) {
+            board2.classList.add("unclickable");
+        } else {
+            board2.classList.remove("unclickable");
+        }
     }
 }
 
