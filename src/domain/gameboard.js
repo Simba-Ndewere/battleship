@@ -9,9 +9,9 @@ function gameboard() {
         ships: [],
 
         receiveAttack: function (coordinate, cellType) {
-      
+
             let shipHit = this.checkInShipCoordinate(coordinate);
-            dom.hitOrMissImage(cellType,coordinate,shipHit);
+            dom.hitOrMissImage(cellType, coordinate, shipHit);
 
             if (shipHit) {
                 const ship = this.checkShipHit(coordinate);
@@ -28,6 +28,11 @@ function gameboard() {
                 }
             }
 
+            if(shipHit){
+                return false;
+            }else{
+                return true;
+            }
         },
 
         checkInShipCoordinate: function (coordinate) {
@@ -62,11 +67,11 @@ function gameboard() {
             this.duplicateCells.length = 0;
             this.ships.length = 0;
 
-            const cruiser = ship(2, 0);
-            const battleship = ship(4, 1);
-            const submarine = ship(3, 2);
-            const aircraft = ship(5, 3);
-            const destroyer = ship(3, 4);
+            const cruiser = ship(2);
+            const battleship = ship(4);
+            const submarine = ship(3);
+            const aircraft = ship(5);
+            const destroyer = ship(3);
 
             const ships = [cruiser, battleship, submarine, aircraft, destroyer];
 
@@ -81,7 +86,6 @@ function gameboard() {
         },
 
         generateCoordinates: function (ship, axes) {
-
             let complete = false;
             let exit = false;
             let shipLength = ship.length;
