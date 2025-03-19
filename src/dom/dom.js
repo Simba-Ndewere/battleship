@@ -1,4 +1,7 @@
 
+import hitImage from '../hit.png'
+import missImage from '../miss.png'
+
 class Dom {
     static colours = ["black", "green", "blue", "purple", "yellow"];
     static colour = 0;
@@ -19,6 +22,7 @@ class Dom {
             board1.appendChild(cell);
             board2.appendChild(cell2);
         }
+        board1.classList.add("unclickable");
     }
 
     static playerDefaultPlacement(ship, direction, startingPosition, gameboard) {
@@ -45,7 +49,7 @@ class Dom {
     static clearBoardCells() {
         for (let a = 0; a < 100; a++) {
             let cell = document.getElementById("playerCell" + a);
-            if (cell.classList.contains("shipPlacement")){
+            if (cell.classList.contains("shipPlacement")) {
                 cell.classList.remove("shipPlacement");
                 cell.style.border = "none";
             }
@@ -53,7 +57,7 @@ class Dom {
     }
 
     static placePlayerShipsOnBoard(coordinates) {
-        for(let b = 0; b < coordinates.length; b++){
+        for (let b = 0; b < coordinates.length; b++) {
             for (let a = 0; a < coordinates[b].length; a++) {
                 const cell = document.getElementById("playerCell" + coordinates[b][a]);
                 cell.classList.add("shipPlacement");
@@ -62,8 +66,8 @@ class Dom {
         }
     }
 
-    static placeComputerShipsOnBoard(coordinates){
-        for(let b = 0; b < coordinates.length; b++){
+    static placeComputerShipsOnBoard(coordinates) {
+        for (let b = 0; b < coordinates.length; b++) {
             for (let a = 0; a < coordinates[b].length; a++) {
                 const cell = document.getElementById("computerCell" + coordinates[b][a]);
                 cell.classList.add("shipPlacement");
@@ -77,6 +81,27 @@ class Dom {
         shuffleShipsButton.classList.add("hideShuffleButton");
         const newGameButton = document.querySelector(".startGameText");
         newGameButton.textContent = "Quit Game";
+    }
+
+    static hitOrMissImage(cellType, coordinate, shipHit) {
+        const cellAttacked = document.getElementById(cellType + coordinate);
+        const imageDiv = document.createElement("img");
+        imageDiv.classList.add("img");
+
+        if (shipHit) {
+            imageDiv.src = hitImage;
+
+        } else {
+            imageDiv.src = missImage;
+
+        }
+        cellAttacked.appendChild(imageDiv);
+        cellAttacked.classList.add("unclickable");
+    }
+
+    static shipSunk(cellType, coordinate){
+        const cellAttacked = document.getElementById(cellType + coordinate);
+        cellAttacked.style.border = "solid 5px red";
     }
 }
 
