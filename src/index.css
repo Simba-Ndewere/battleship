@@ -54,18 +54,25 @@ body {
 
 .modal {
     height: 40px;
-    background: #009578;
+    background: white;
     padding: 0;
+    border: solid black 2px;
     font-weight: 500;
-    font: 12px;
     border-radius: 5px;
-    color: white;
+    color: black;
     font-family: 'Press Start 2P', cursive;
     width: 20%;
     position: absolute;
     left: 50%;
     right: 50%;
     transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-display {
+    font-size: 14px;
 }
 
 .button:hover {
