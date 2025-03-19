@@ -1,6 +1,5 @@
 import ship from './ship'
-import hitImage from '../hit.png'
-import missImage from '../miss.png'
+import dom from '../dom/dom';
 
 function gameboard() {
     return {
@@ -10,26 +9,25 @@ function gameboard() {
         ships: [],
 
         receiveAttack: function (coordinate, cellType) {
-            //check cell clicked
-            //check cell clicked is in ship coordinates
-            //check which ship has been hit
-            //check if the ship has been sunk
-
-            const cellAttacked = document.getElementById(cellType + coordinate);
-            const imageDiv = document.createElement("img");
-
-
+      
             let shipHit = this.checkInShipCoordinate(coordinate);
+            dom.hitOrMissImage(cellType,coordinate,shipHit);
+
             if (shipHit) {
-                imageDiv.src = hitImage;
-                imageDiv.setAttribute("height", "35");
-                imageDiv.setAttribute("width", "35");
-            } else {
-                imageDiv.src = missImage;
-                imageDiv.setAttribute("height", "45");
-                imageDiv.setAttribute("width", "45");
+                const ship = this.checkShipHit(coordinate);
+                ship.hit();
+
+                if (ship.hitSum == ship.length) {
+                    ship.sunk = true;
+                }
+
+                if (ship.isSunk()) {
+                    ship.getCoordinates().forEach(coordinate => {
+                        dom.shipSunk(cellType, coordinate);
+                    });
+                }
             }
-            cellAttacked.appendChild(imageDiv);
+
         },
 
         checkInShipCoordinate: function (coordinate) {
@@ -48,7 +46,8 @@ function gameboard() {
                 const coordinatesShipArray = this.ships[a].getCoordinates();
                 for (let b = 0; b < coordinatesShipArray.length; b++) {
                     if (coordinatesShipArray[b] == coordinate) {
-                        return this.ships[a].getShipIdentification();
+                        const ship = this.ships[a];
+                        return ship;
                     }
                 }
             }
@@ -61,6 +60,7 @@ function gameboard() {
         shuffle: function () {
             this.shipCoordinates.length = 0;
             this.duplicateCells.length = 0;
+            this.ships.length = 0;
 
             const cruiser = ship(2, 0);
             const battleship = ship(4, 1);
