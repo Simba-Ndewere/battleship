@@ -11,7 +11,7 @@ const computerBoard = document.querySelector(".board2");
 
 const playerGameBoard = gameboard();
 const computerGameBoard = gameboard();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
 const currentPlayer = player();
 const computerPlayer = player();
 
@@ -43,28 +43,31 @@ const createDefaultPlayerShips = () => {
 shuffleShips.addEventListener('click', function () {
     dom.clearBoardCells();
     dom.placePlayerShipsOnBoard(playerGameBoard.shuffle());
-    currentPlayer.addGameBoard(playerGameBoard);
 });
 
-newGame.addEventListener('click', function () {
-    dom.placeComputerShipsOnBoard(computerGameBoard.shuffle());
-    dom.removeShuffleButton();
-    computerPlayer.addGameBoard(computerGameBoard);
+newGame.addEventListener('click', (event) => {
+    if (event.target.textContent === 'Start Game') {
+        dom.placeComputerShipsOnBoard(computerGameBoard.shuffle());
+        dom.removeShuffleButton();
+        computerPlayer.addGameBoard(computerGameBoard);
+    } else {
+        location.reload();
+    }
 });
 
 playerBoard.addEventListener("click", (event) => {
-    if(event.target.classList.contains("cell")){
+    if (event.target.classList.contains("cell")) {
         let id = Number(event.target.id.substring(10));
+        playerGameBoard.receiveAttack(id, "playerCell");
     }
 });
 
-computerBoard.addEventListener("click",(event) => {
-    if(event.target.classList.contains("cell2")){
+computerBoard.addEventListener("click", (event) => {
+    if (event.target.classList.contains("cell2")) {
         let id = Number(event.target.id.substring(12));
-        console.log(id);
+        computerGameBoard.receiveAttack(id, "computerCell");
     }
 });
 
-//playerCell
 window.onload = createDefaultPlayerShips();
 
