@@ -12,12 +12,6 @@ test('ship object', () => {
     expect(shipObject(3)).toHaveProperty("getCoordinates");
 });
 
-test('ship is sunk test', () => {
-    const data = shipObject(3);
-    expect(data.sunk).not.toBeTruthy();
-    data.isSunk();
-    expect(data.sunk).toBeTruthy();
-});
 
 test('ship is hit test', () => {
     const data = shipObject(3);

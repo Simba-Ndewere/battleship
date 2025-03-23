@@ -81,6 +81,8 @@ class Dom {
         shuffleShipsButton.classList.add("hideShuffleButton");
         const newGameButton = document.querySelector(".startGameText");
         newGameButton.textContent = "Quit Game";
+        const modalDisplay = document.querySelector(".modal-display");
+        modalDisplay.textContent = "Your turn";
     }
 
     static hitOrMissImage(cellType, coordinate, shipHit) {

@@ -6,7 +6,6 @@ import player from "./domain/player.js";
 
 const shuffleShips = document.getElementById('shuffle');
 const newGame = document.getElementById('newGame');
-const playerBoard = document.querySelector(".board1");
 const computerBoard = document.querySelector(".board2");
 
 const playerGameBoard = gameboard();
@@ -14,7 +13,8 @@ const computerGameBoard = gameboard();
 
 const currentPlayer = player();
 const computerPlayer = player();
-let playerTurn = 0; // 0 for player and 1 for computer
+
+const attackedCells = [];
 
 dom.createBoardGrids();
 
@@ -39,6 +39,7 @@ const createDefaultPlayerShips = () => {
         playerGameBoard.ships.push(ships[a]);
     }
     currentPlayer.addGameBoard(playerGameBoard);
+    dom.lockUnlockBoard(0);
 }
 
 shuffleShips.addEventListener('click', function () {
@@ -51,18 +52,16 @@ newGame.addEventListener('click', (event) => {
         dom.placeComputerShipsOnBoard(computerGameBoard.shuffle());
         dom.removeShuffleButton();
         computerPlayer.addGameBoard(computerGameBoard);
+        dom.lockUnlockBoard(1);
     } else {
         location.reload();
     }
 });
 
-playerBoard.addEventListener("click", (event) => {
+const attackPlayerBoard = (id) => {
     let changeTurn = true;
-
-    if (event.target.classList.contains("cell")) {
-        let id = Number(event.target.id.substring(10));
-        changeTurn = playerGameBoard.receiveAttack(id, "playerCell");
-    }
+    changeTurn = playerGameBoard.receiveAttack(id, "playerCell");
+    attackedCells.push(id);
 
     if (changeTurn) {
         dom.hitOrMissDisplay("miss");
@@ -71,12 +70,15 @@ playerBoard.addEventListener("click", (event) => {
     } else {
         dom.hitOrMissDisplay("hit");
         dom.displayPlayerTurn(1);
+        setTimeout(function () {
+            let randomNumber = computerPick(100);
+            attackPlayerBoard(randomNumber);
+        }, 4000);
     }
-});
+}
 
 computerBoard.addEventListener("click", (event) => {
     let changeTurn = true;
-
     if (event.target.classList.contains("cell2")) {
         let id = Number(event.target.id.substring(12));
         changeTurn = computerGameBoard.receiveAttack(id, "computerCell");
@@ -86,11 +88,29 @@ computerBoard.addEventListener("click", (event) => {
         dom.lockUnlockBoard(0);
         dom.hitOrMissDisplay("miss");
         dom.displayPlayerTurn(1);
+        let randomNumber = computerPick(100);
+        setTimeout(function () {
+            attackPlayerBoard(randomNumber);
+        }, 4000);
     } else {
         dom.hitOrMissDisplay("hit");
         dom.displayPlayerTurn(0);
     }
 });
+
+const computerPick = (max) => {
+    let exit = false;
+    let generatedNumber = 0;
+    while (!exit) {
+        generatedNumber = Math.floor(Math.random() * max);
+        if (!attackedCells.includes(generatedNumber)) {
+            attackedCells.push(generatedNumber);
+            exit = true;
+        }
+    }
+    return generatedNumber
+}
+
 
 window.onload = createDefaultPlayerShips();
 

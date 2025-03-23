@@ -30,17 +30,14 @@ test('test shuffling ship coordinates', () => {
 
 });
 
-
-test('check cell clicked in is ship coordinates', () => {
-
-    //check if a ship has been sunk
+test('check cell clicked is in ship coordinates', () => {
     
     const gameBoard = gameboard();
 
     const coordinates = [46,45];
     gameBoard.shipCoordinates.push(coordinates);
     let value = gameBoard.checkInShipCoordinate(45);
-    expect(value).toBeTruthy();
+    expect(value).toBe(true);
 
 });
 
