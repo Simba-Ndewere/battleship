@@ -66,16 +66,6 @@ class Dom {
         }
     }
 
-    static placeComputerShipsOnBoard(coordinates) {
-        for (let b = 0; b < coordinates.length; b++) {
-            for (let a = 0; a < coordinates[b].length; a++) {
-                const cell = document.getElementById("computerCell" + coordinates[b][a]);
-                cell.classList.add("shipPlacement");
-                cell.style.border = "solid 5px " + this.colours[b];
-            }
-        }
-    }
-
     static removeShuffleButton() {
         const shuffleShipsButton = document.getElementById("shuffle");
         shuffleShipsButton.classList.add("hideShuffleButton");
@@ -104,6 +94,8 @@ class Dom {
     static shipSunk(cellType, coordinate) {
         const cellAttacked = document.getElementById(cellType + coordinate);
         cellAttacked.style.border = "solid 5px red";
+        cellAttacked.style.backgroundColor = "gray";
+        cellAttacked.style.borderRadius = "10px";
     }
 
     static hitOrMissDisplay(value) {
