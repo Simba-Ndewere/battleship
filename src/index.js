@@ -64,57 +64,8 @@ newGame.addEventListener('click', (event) => {
     }
 });
 
-const attackPlayerBoard = (id) => {
-    let changeTurn = [];
-    changeTurn = playerGameBoard.receiveAttack(id, "playerCell");
-    attackedCells.push(id);
-
-    if (changeTurn) {
-        dom.hitOrMissDisplay("miss");
-        dom.displayPlayerTurn(0);
-        dom.lockUnlockBoard(1);
-
-        if (hitCells.length == 1) {
-            changeDirection();
-        }
-
-        if(hitCells.length > 1){
-            hitCells.push(firstShipCoordinates[0]);
-            oppositeDirection();
-        }
-
-    } else {
-        dom.hitOrMissDisplay("hit");
-        dom.displayPlayerTurn(1);
-        console.log("HIT");
-        const ship = checkShipHit(id);
-
-        if (hitCells.length == 0) {
-            const direction = initialDirection(id);
-            directionArray.push(initialDirection(id));
-
-            if(direction == 'noLeft' || direction == 'noRight' || direction == 'noDown' || direction == 'noUp'){
-                changeDirection();
-            }
-        }
-
-        if (!hitShips.includes(ship)) {
-            hitShips.push(ship);
-            firstShipCoordinates.push(id);
-        }
-
-        if (hitShips[0].coordinates.includes(id)) {
-            hitCells.push(id);
-        }
-
-        setTimeout(function () {
-            checkForAdjacentCells();
-        }, 4000);
-    }
-}
-
 computerBoard.addEventListener("click", (event) => {
-    let changeTurn = [];
+    let changeTurn = true;
 
     if (event.target.classList.contains("cell2")) {
         let id = Number(event.target.id.substring(12));
@@ -126,12 +77,10 @@ computerBoard.addEventListener("click", (event) => {
         dom.hitOrMissDisplay("miss");
         dom.displayPlayerTurn(1);
         setTimeout(function () {
-
             if (hitShips.length == 0) {
                 let randomNumber = computerPick(100);
                 attackPlayerBoard(randomNumber);
             } else {
-                //continue with adjacent cells
                 checkForAdjacentCells();
             }
         }, 4000);
@@ -141,56 +90,136 @@ computerBoard.addEventListener("click", (event) => {
     }
 });
 
+//new class for AI code
+
+const attackPlayerBoard = (id) => {
+    let changeTurn = playerGameBoard.receiveAttack(id, "playerCell");
+    attackedCells.push(id);
+
+    if (changeTurn) {
+        attackPlayerBoardMiss();
+    } else {
+        attackPlayerBoardHit(id);
+    }
+}
+
+const attackPlayerBoardMiss = () => {
+    dom.hitOrMissDisplay("miss");
+    dom.displayPlayerTurn(0);
+    dom.lockUnlockBoard(1);
+
+    if (hitCells.length == 1) changeDirection();
+
+    if (hitCells.length > 1) {
+        hitCells.push(firstShipCoordinates[0]);
+        oppositeDirection();
+    }
+}
+
+const attackPlayerBoardHit = (id) => {
+    dom.hitOrMissDisplay("hit");
+    dom.displayPlayerTurn(1);
+    const ship = checkShipHit(id);
+
+    if (hitCells.length == 0) {
+        const direction = initialDirection(id);
+        directionArray.push(direction);
+        if (direction.includes('no')) changeDirection();
+    }
+
+    if (!hitShips.includes(ship)) {
+        hitShips.push(ship);
+        firstShipCoordinates.push(id);
+    }
+
+    if (hitShips[0].coordinates.includes(id)) hitCells.push(id);
+
+    if (hitShips.length > 1) {
+
+        if (!hitShips[0].coordinates.includes(id) && hitCells.length == 1) changeDirection();
+
+        if (!hitShips[0].coordinates.includes(id) && hitCells.length > 1) {
+            hitCells.push(firstShipCoordinates[0]);
+            oppositeDirection();
+        }
+    }
+    setTimeout(function () {
+        checkForAdjacentCells();
+    }, 4000);
+}
+
 const checkForAdjacentCells = () => {
-    //always continue with ship at [0]
-    console.log("called");
-    //check ship sunk 
     let newShip = checkShipSunk();
 
     if (newShip) {
-        console.log("ship sunk");
-        //delete from hitShips[0]
-        console.log("firstShipcoordinates" + firstShipCoordinates);
-        console.log("hitCells" + hitCells);
-        console.log("ship[0] coordinates" + hitShips[0].coordinates);
-
-        firstShipCoordinates.shift();
-        hitCells.length = 0;
-        hitShips.shift();
-        directionArray.length = 0;
-
-        if (firstShipCoordinates != 0) {
-            hitCells.push(firstShipCoordinates[0]);
-            //directionArray.push(initialDirection(firstShipCoordinates[0]));
-            const direction = initialDirection(firstShipCoordinates[0]);
-            directionArray.push(initialDirection(firstShipCoordinates[0]));
-            
-            if(direction == 'noLeft' || direction == 'noRight' || direction == 'noDown' || direction == 'noUp'){
-                changeDirection();
-            }
-            checkForAdjacentCells();
-        } else {
-            let randomNumber = computerPick(100);
-            attackPlayerBoard(randomNumber);
-        }
-        //delete from firstShipCoordinates[0]
-        //clear hitCells and place firstShipCoordinates[1] at hitCell[0]
-        //attack new ship
-
+        adjacentCellsNewShip();
     } else {
-        console.log("switch");
-        console.log("direction array" + directionArray);
-        switch (directionArray[directionArray.length - 1]) {
-            case 'left': attackPlayerBoard(hitCells[hitCells.length - 1] - 1);
-                break;
-            case 'right': attackPlayerBoard(hitCells[hitCells.length - 1] + 1);
-                break;
-            case 'up': attackPlayerBoard(hitCells[hitCells.length - 1] - 10);
-                break;
-            case 'down': attackPlayerBoard(hitCells[hitCells.length - 1] + 10);
-                break;
-        }
+        adjacentCellsCurrentShip();
     }
+}
+
+const adjacentCellsNewShip = () => {
+    firstShipCoordinates.shift();
+    hitCells.length = 0;
+    hitShips.shift();
+    directionArray.length = 0;
+
+    if (firstShipCoordinates != 0) {
+        hitCells.push(firstShipCoordinates[0]);
+        const direction = initialDirection(firstShipCoordinates[0]);
+        directionArray.push(direction);
+        if (direction.includes("no")) changeDirection();
+        checkForAdjacentCells();
+    } else {
+        let randomNumber = computerPick(100);
+        attackPlayerBoard(randomNumber);
+    }
+}
+
+const adjacentCellsCurrentShip = () => {
+    switch (directionArray[directionArray.length - 1]) {
+        case 'left':
+            if (checkAttackedCells(hitCells[hitCells.length - 1] - 1)) {
+                adjacentCellsChangeDirection();
+            } else {
+                attackPlayerBoard(hitCells[hitCells.length - 1] - 1);
+            }
+            break;
+        case 'right':
+            if (checkAttackedCells(hitCells[hitCells.length - 1] + 1)) {
+                adjacentCellsChangeDirection();
+            } else {
+                attackPlayerBoard(hitCells[hitCells.length - 1] + 1);
+            }
+            break;
+        case 'up':
+            if (checkAttackedCells(hitCells[hitCells.length - 1] - 10)) {
+                adjacentCellsChangeDirection();
+            } else if (hitCells[hitCells.length - 1] - 10 < 0) {
+                adjacentCellsChangeDirection();
+            } else {
+                attackPlayerBoard(hitCells[hitCells.length - 1] - 10);
+            }
+            break;
+        case 'down':
+            if (checkAttackedCells(hitCells[hitCells.length - 1] + 10)) {
+                adjacentCellsChangeDirection();
+            } else if (hitCells[hitCells.length - 1] + 10 > 99) {
+                adjacentCellsChangeDirection();
+            } else {
+                attackPlayerBoard(hitCells[hitCells.length - 1] + 10);
+            }
+            break;
+    }
+}
+
+const adjacentCellsChangeDirection = () => {
+    hitCells.length > 1 ? (hitCells.push(firstShipCoordinates[0]), oppositeDirection()) : changeDirection();
+    checkForAdjacentCells();
+}
+
+const checkAttackedCells = (newCoordinate) => {
+    return attackedCells.includes(newCoordinate);
 }
 
 const checkShipSunk = () => {
@@ -221,19 +250,9 @@ const oppositeDirection = () => {
         case 'down':
             directionArray.push('up');
             break;
-        case 'top':
+        case 'up':
             directionArray.push('down');
             break;
-    }
-}
-
-const checkOutOfBounds = (id) => {
-    let overboard = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
-
-    if (overboard.includes(id)) {
-        return true;
-    } else {
-        return false;
     }
 }
 
@@ -246,68 +265,18 @@ const random = (max) => {
     return Math.floor(Math.random() * max);
 }
 
-
 const changeDirection = () => {
     const directions = ["left", "right", "up", "down"];
     let exit = true;
-    console.log("check direction");
     while (exit) {
         const newDirection = directions[random(4)];
 
-        if (directionArray[0] == 'noDown' && newDirection == 3) {
+        if (directionArray[0].includes('no') && directionArray[0].includes(newDirection)) {
             continue;
         }
 
-        if (directionArray[0] == 'noUp' && newDirection == 2) {
+        if (directionArray.includes('no' + newDirection)) {
             continue;
-        }
-
-        if (directionArray[0] == 'noRight' && newDirection == 1) {
-            continue;
-        }
-
-        if (directionArray[0] == 'noLeft' && newDirection == 0) {
-            continue;
-        }
-
-        if (directionArray.includes('noLeft') && directionArray.includes('noUp')) {
-            if (newDirection == 0) {
-                continue;
-            }
-
-            if (newDirection == 2) {
-                continue;
-            }
-        }
-
-        if (directionArray.includes('noRight') && directionArray.includes('noUp')) {
-            if (newDirection == 1) {
-                continue;
-            }
-
-            if (newDirection == 2) {
-                continue;
-            }
-        }
-
-        if (directionArray.includes('noRight') && directionArray.includes('noDown')) {
-            if (newDirection == 1) {
-                continue;
-            }
-
-            if (newDirection == 3) {
-                continue;
-            }
-        }
-
-        if (directionArray.includes('noLeft') && directionArray.includes('noDown')) {
-            if (newDirection == 0) {
-                continue;
-            }
-
-            if (newDirection == 3) {
-                continue;
-            }
         }
 
         if (!directionArray.includes(newDirection)) {
@@ -317,17 +286,9 @@ const changeDirection = () => {
     }
 }
 
-
 const initialDirection = (coordinate) => {
     let direction = '';
     let numDirection = random(4);
-
-    let topEdge = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    let bottomEdge = [90, 91, 92, 93, 94, 95, 96, 97, 98, 99];
-
-    let leftEdge = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
-    let rightEdge = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
-
 
     switch (numDirection) {
         case 0: direction = 'up'
@@ -339,31 +300,36 @@ const initialDirection = (coordinate) => {
         case 3: direction = 'left'
             break;
     }
+    direction = checkEdges(coordinate, direction);
+    return direction;
+}
 
-    if (topEdge.includes(coordinate))
-        direction = 'noUp';
+const checkEdges = (coordinate, direction) => {
 
-    if (bottomEdge.includes(coordinate))
-        direction = 'noDown';
+    let topEdge = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let bottomEdge = [90, 91, 92, 93, 94, 95, 96, 97, 98, 99];
 
-    if (leftEdge.includes(coordinate))
-        direction = 'noLeft';
+    let leftEdge = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
+    let rightEdge = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
 
-    if (rightEdge.includes(coordinate))
-        direction = 'noRight';
+    if (topEdge.includes(coordinate)) direction = 'noup';
 
+    if (bottomEdge.includes(coordinate)) direction = 'nodown';
+
+    if (leftEdge.includes(coordinate)) direction = 'noleft';
+
+    if (rightEdge.includes(coordinate)) direction = 'noright';
 
     switch (coordinate) {
-        case 0: directionArray.push('noUp');
+        case 0:
+        case 9:
+            directionArray.push('noup');
             break;
-        case 9: directionArray.push('noUp');
-            break;
-        case 90: directionArray.push('noDown');
-            break;
-        case 99: directionArray.push('noDown');
+        case 90:
+        case 99:
+            directionArray.push('nodown');
             break;
     }
-
     return direction;
 }
 

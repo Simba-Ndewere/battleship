@@ -15,7 +15,7 @@ function gameboard() {
 
             if (shipHit) {
                 const ship = this.checkShipHit(coordinate);
-                ship.hit();
+                ship.hit(); 
 
                 if (ship.hitSum == ship.length) {
                     ship.sunk = true;
@@ -28,9 +28,9 @@ function gameboard() {
                 }
             }
 
-            if(shipHit){
+            if (shipHit) {
                 return false;
-            }else{
+            } else {
                 return true;
             }
         },
